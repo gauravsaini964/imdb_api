@@ -49,6 +49,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "api.middleware.auth_check.KeyAndTokenCheck",
 ]
 
 ROOT_URLCONF = "movie_watchtime.urls"
@@ -109,7 +110,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 JWT_ISSUER = "http://interview.test.com/"
-API_KEY = "dsHSYWhbdas17876735Hdada"
+API_KEY = "dsHSYWhbdas17876735Hdada"  # Typically wanna get this from environment
 
 JWT_AUTH = {
     "JWT_ENCODE_HANDLER": "rest_framework_jwt.utils.jwt_encode_handler",
