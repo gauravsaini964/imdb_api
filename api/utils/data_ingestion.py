@@ -1,8 +1,7 @@
-import lxml
+# import lxml
 
 from bs4 import BeautifulSoup
 from requests import get
-import re
 
 from api.models import Movie, Actor, Director, MovieActor
 
@@ -81,7 +80,7 @@ class DataIngestion:
                 for row in cast_row:
                     try:
                         final_movie_data["cast_list"].append(row.find("a").text.replace("\n", "").strip())
-                    except:
+                    finally:
                         pass
                 final_movie_data["plot_summary"] = plot_summary_wrapper.div.find(
                     "div", class_="summary_text"

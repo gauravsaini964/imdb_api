@@ -1,4 +1,3 @@
-from requests.api import request
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,11 +7,10 @@ from rest_framework.views import APIView
 
 # Misc Imports
 from api.utils.pagination_config import PostLimitOffsetPagination
-from api.utils.data_ingestion import DataIngestion
 
 
 # Models Imports
-from api.models import AuthUser, Movie, MovieActor, UserMovie
+from api.models import Movie, UserMovie
 
 # Serializer
 from api.serializer import UserMoviesListSerializer
@@ -90,7 +88,7 @@ class UserDashboardStats(APIView):
                 "result": user_stats,
             }
             return Response(response, response["status"])
-        except Exception as e:
+        except Exception:
             response = {
                 "message": "Something went wrong",
                 "status": status.HTTP_500_INTERNAL_SERVER_ERROR,

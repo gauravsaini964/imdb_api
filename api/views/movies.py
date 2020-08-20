@@ -11,7 +11,7 @@ from api.utils.data_ingestion import DataIngestion
 
 
 # Models Imports
-from api.models import Movie, MovieActor
+from api.models import Movie
 
 # Serializer Import
 from api.serializer import MoviesListSerializer, MovieDetailSerializer
