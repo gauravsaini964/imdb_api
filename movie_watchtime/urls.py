@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import auth, movies
+from api.views import auth, movies, user
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -24,4 +24,7 @@ urlpatterns = [
     path("v1/movies/list", movies.MoviesList.as_view()),
     path("v1/movies/detail/<int:movie_id>", movies.MovieDetail.as_view()),
     path("v1/movies/ingest/", movies.IngestMovie.as_view()),
+    path("v1/user/history", user.UserMovieHistory.as_view()),
+    path("v1/user/add/watchlist/", user.AddMovieToWatchList.as_view()),
+    path("v1/user/stats", user.UserDashboardStats.as_view()),
 ]

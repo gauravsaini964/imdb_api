@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Director, Movie, MovieActor, Actor
+from api.models import Director, Movie, MovieActor, Actor, UserMovie
 
 
 class MoviesListSerializer(serializers.ModelSerializer):
@@ -57,3 +57,17 @@ class MovieDetailSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_director(obj):
         return f"{obj.director.first_name} {obj.director.last_name}"
+
+
+class UserMoviesListSerializer(serializers.ModelSerializer):
+
+    movie_details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserMovie
+        fields = ("id", "user_id", "movie_id", "movie_details")
+
+    @staticmethod
+    def get_movie_details(obj):
+        movie = Movie.objects.filter(id=obj.movie_id).values("title", "runtime", "ratings", "plot_summary").first()
+        return movie
