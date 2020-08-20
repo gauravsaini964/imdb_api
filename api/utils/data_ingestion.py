@@ -9,17 +9,14 @@ from requests import get
 url = "https://www.imdb.com/chart/top/"
 
 
-class IMDB:
+class DataIngestion:
     def __init__(self, url):
-        super(IMDB, self).__init__()
+        super(DataIngestion, self).__init__()
         page = get(url)
 
         self.soup = BeautifulSoup(page.content, "lxml")
 
-    def articleTitle(self):
-        return self.soup.find("h1", class_="header").text.replace("\n", "")
-
-    def bodyContent(self):
+    def body_content(self):
         content = self.soup.find(id="main")
         return content.find_all("tbody", class_="lister-list")
 
@@ -28,10 +25,10 @@ class IMDB:
         movie_soup = BeautifulSoup(movie_page.content, "lxml")
         return movie_soup
 
-    def movieData(self):
-        movieFrame = self.bodyContent()
+    def movie_data(self):
+        top_page = self.body_content()
 
-        for movie_rows in movieFrame:
+        for movie_rows in top_page:
             movie_row = movie_rows.find_all("td", class_="titleColumn")
             for movie_info in movie_row:
                 href = movie_info.find(href=True)
@@ -72,6 +69,6 @@ class IMDB:
         return
 
 
-ingest = IMDB(url)
-data = ingest.movieData()
+ingest = DataIngestion(url)
+data = ingest.movie_data()
 
