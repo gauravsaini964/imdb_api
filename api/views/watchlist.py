@@ -10,13 +10,13 @@ from api.utils.pagination_config import PostLimitOffsetPagination
 
 
 # Models Imports
-from api.models import Movie, UserMovie, UserWatchlist
+from api.models import Movie, UserWatchlist, UserMovie
 
 # Serializer
 from api.serializer import UserMoviesListSerializer
 
 
-class UserMovieHistory(ListAPIView):
+class UserWatchlistHistory(ListAPIView):
 
     serializer_class = UserMoviesListSerializer
     pagination_class = PostLimitOffsetPagination
@@ -24,26 +24,34 @@ class UserMovieHistory(ListAPIView):
     def get_queryset(self, *args, **kwargs):
         search = self.request.GET.get("search", "")
         user = self.request.requested_by
-        movie_list_query_result = UserMovie.objects.filter(user_id=user).order_by("-created_at")
+        movie_list_query_result = UserWatchlist.objects.filter(user_id=user).order_by("-created_at")
         if search:
             return (
-                UserMovie.objects.filter(Q(id__icontains=search) | Q(title__icontains=search))
+                UserWatchlist.objects.filter(Q(id__icontains=search) | Q(title__icontains=search))
                 .filter(user_id=user)
                 .order_by("-created_at")
             )
         return movie_list_query_result
 
 
-class AddMovieToAlreadyWatchList(APIView):
+class AddMovieToWatchList(APIView):
     @staticmethod
     def post(request):
         try:
             user = request.requested_by
             movie_id = request.data.get("movie_id")
 
-            UserWatchlist.objects.filter(user_id=user, movie_id=movie_id).delete()
+            user_movie_history = UserMovie.objects.filter(user_id=user, movie_id=movie_id)
 
-            user_movie_obj = UserMovie.objects.filter(user_id=user, movie_id=movie_id).get_or_create(
+            if user_movie_history:
+                response = {
+                    "message": "Cannot add already watched movie to watchlist",
+                    "status": status.HTTP_400_BAD_REQUEST,
+                    "result": {},
+                }
+                return Response(response, response["status"])
+
+            user_movie_obj = UserWatchlist.objects.filter(user_id=user, movie_id=movie_id).get_or_create(
                 user_id=user, movie_id=movie_id
             )
             if user_movie_obj:
@@ -68,32 +76,3 @@ class AddMovieToAlreadyWatchList(APIView):
             }
             return Response(response, response["status"])
 
-
-class UserDashboardStats(APIView):
-    @staticmethod
-    def get(request):
-        try:
-            user = request.requested_by
-
-            user_movie_history = (
-                UserMovie.objects.filter(user_id=user)
-                .values("movie_id", "movie__title", "movie__ratings")
-                .order_by("-created_at")
-            )
-
-            user_watch_time = Movie.objects.filter(usermovie__user_id=user).aggregate(watch_time=Sum("runtime"))
-
-            user_stats = {"watch_time": user_watch_time["watch_time"], "last_three_movies": user_movie_history[:3]}
-            response = {
-                "message": "User stats fetched successfully",
-                "status": status.HTTP_201_CREATED,
-                "result": user_stats,
-            }
-            return Response(response, response["status"])
-        except Exception:
-            response = {
-                "message": "Something went wrong",
-                "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
-                "result": {},
-            }
-            return Response(response, response["status"])
