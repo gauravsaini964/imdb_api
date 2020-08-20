@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import datetime
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -106,3 +107,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+
+JWT_ISSUER = "http://interview.test.com/"
+API_KEY = "dsHSYWhbdas17876735Hdada"
+
+JWT_AUTH = {
+    "JWT_ENCODE_HANDLER": "rest_framework_jwt.utils.jwt_encode_handler",
+    "JWT_DECODE_HANDLER": "rest_framework_jwt.utils.jwt_decode_handler",
+    "JWT_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_payload_handler",
+    "JWT_PAYLOAD_GET_USER_ID_HANDLER": "rest_framework_jwt.utils.jwt_get_user_id_from_payload_handler",
+    "JWT_RESPONSE_PAYLOAD_HANDLER": "rest_framework_jwt.utils.jwt_response_payload_handler",
+    "JWT_SECRET_KEY": "UaLpmaZBwLB5mNlMIoePivZYrP2m2kw9",
+    "JWT_PUBLIC_KEY": None,
+    "JWT_PRIVATE_KEY": None,
+    "JWT_ALGORITHM": "HS256",
+    "JWT_VERIFY": True,
+    "JWT_VERIFY_EXPIRATION": True,
+    "JWT_LEEWAY": 0,
+    "JWT_EXPIRATION_DELTA": datetime.timedelta(days=1),
+    "JWT_AUDIENCE": None,
+    "JWT_ISSUER": JWT_ISSUER,
+    "JWT_ALLOW_REFRESH": False,
+    "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=30),
+    "JWT_AUTH_HEADER_PREFIX": "Bearer",
+}
+
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 10,
+    "OFFSET": "offset",
+}
