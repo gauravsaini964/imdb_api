@@ -3,6 +3,23 @@ from django.db import models
 # Create your models here.
 
 
+class AuthUser(models.Model):
+    password = models.CharField(max_length=128)
+    last_login = models.DateTimeField(blank=True, null=True)
+    is_superuser = models.BooleanField()
+    username = models.CharField(unique=True, max_length=150)
+    first_name = models.CharField(max_length=30)
+    email = models.CharField(max_length=254)
+    is_staff = models.BooleanField()
+    is_active = models.BooleanField()
+    date_joined = models.DateTimeField()
+    last_name = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = "auth_user"
+
+
 class Actor(models.Model):
     id = models.AutoField(primary_key=True)
     first_name = models.CharField(max_length=100)
@@ -58,3 +75,16 @@ class MovieActor(models.Model):
 
     class Meta:
         db_table = "movie_actor"
+
+
+class UserMovie(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(AuthUser, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_field_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = "user_movie"
