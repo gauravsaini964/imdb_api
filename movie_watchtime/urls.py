@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import auth
+from api.views import auth, movies
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("v1/auth/register/", auth.RegisterView.as_view()),
     path("v1/auth/login/", auth.LoginView.as_view()),
+    path("v1/movies/list", movies.MoviesList.as_view()),
+    path("v1/movies/detail/<int:movie_id>", movies.MovieDetail.as_view()),
+    path("v1/movies/ingest/", movies.IngestMovie.as_view()),
 ]

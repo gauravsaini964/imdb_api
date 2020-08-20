@@ -38,8 +38,8 @@ class Director(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, null=True)
-    created_at = models.DateTimeField(auto_now=True)
-    updated_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     is_field_active = models.BooleanField(default=True)
 
     class Meta:
@@ -53,6 +53,7 @@ class Movie(models.Model):
     runtime = models.FloatField(default=60.0, null=False)
     ratings = models.FloatField(default=0.0, null=False)
     plot_summary = models.CharField(max_length=1000, blank=False)
+    plot = models.CharField(max_length=2000, blank=False, null=True)
     director = models.ForeignKey(Director, null=True, on_delete=models.SET_NULL)
     release_year = models.CharField(max_length=1000, blank=False)
     genre = models.CharField(max_length=1000, blank=False)
