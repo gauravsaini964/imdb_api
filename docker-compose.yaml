@@ -1,0 +1,33 @@
+version: "3"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/home/app
+    depends_on:
+      - format
+  format:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/home/app
+    command: ["black", ".", "-l", "119", "--check"]
+  lint:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/home/app
+    command:
+      [
+        "flake8",
+        "--ignore",
+        "E402,W391,W503",
+        "--max-line-length=120",
+        "--exclude=migrations",
+      ]
